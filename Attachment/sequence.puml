@@ -1,0 +1,13 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+autonumber
+
+"Attachment Uploader" -> "Attachment \n API" : **POST /attachment** : Dépot d'un fichier dans le body (binary) et \nmétadonnées de base dans les headers
+... Upload du fichier ...
+"Attachment \n API" --> "Attachment Uploader" : **HTTP 201** avec id
+"Attachment Uploader" -> "Attachment \n API" : **HEAD /attachment/{id}** : Récupération des métadonnées du fichier
+"Attachment \n API" --> "Attachment Uploader" : Renvoi des métadonnées dans les headers
+"Attachment Uploader" -> "Attachment \n API" : **GET /attachment/{id}** : Récupération du fichier (binary) et des métadonnées de base
+... download du fichier ...
+"Attachment \n API" --> "Attachment Uploader" : **HTTP 200** avec fichier téléchargé et métadonnées dans les headers
+@enduml

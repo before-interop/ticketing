@@ -1,0 +1,66 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+
+group Pré requis dépot ticket
+    "Customer" -> "Anomalie IPE API": **POST /anomalieIpe** : Définition de l'anomalie
+    "Anomalie IPE API" -> "Customer": **HTTP 201** Renvoi de l'url / id de l'anomalie déclarée
+    "Customer" -> "Attachment API": **POST /attachment** Upload d'un fichier
+    ... Upload du fichier ...
+    "Attachment API" --> "Customer": **HTTP 201** Renvoi de l'url / id fichier
+end
+
+group Création / mise à jour par le client
+    Customer -> "Ticketing API" : **POST /troubleTicket** Création du ticket à **acknowledged** \navec ses références de **documents** et d'**anomalie**
+    "Ticketing API" --> Customer : **HTTP 201** Identifiant du ticket
+    ... ...
+    Customer -> "Ticketing API" : **PATCH /troubleTicket/{id}** Ajout d'informations complémentaires via les notes
+    "Ticketing API" --> Customer : **HTTP 200** Ticket mis à jour
+    ... ...
+    group Abonnement si nécessaire
+        Customer -> "Ticketing API" : **POST /subscribe** Abonnement aux notifications \n pour une requete du client avec url de callback
+        "Ticketing API" --> Customer : **HTTP 201** Abonnement effectué
+    end
+end
+
+group Traitement du ticket
+    ... ...
+    "Ticketing API" -> "Ticketing API" : Maj du ticket : Passage en **inProgress** \n suite à qualification OK
+    "Ticketing API" -> "Customer" : **POST callbackUrl/troubleTicketStatusChangeEvent** \n avec évènement passage à **inProgress**.\n Valorisation de la complexité et de la date de résolution estimée
+    "Customer" --> "Ticketing API" : **HTTP 201** Evènement reçu
+
+    ... ...
+    "Ticketing API" -> "Ticketing API" : Maj du ticket : Passage en **pending** \npour demande d'info client
+    "Ticketing API" -> "Customer" : **POST callbackUrl/troubleTicketStatusChangeEvent** \n avec évènement passage à **pending**
+    "Customer" --> "Ticketing API" : **HTTP 201** Evènement reçu
+
+    group Traitement client
+        "Customer" -> "Attachment API": **POST /attachment** Upload d'un fichier supplémentaire
+        ... Upload du fichier ...
+        "Attachment API" --x "Customer": **HTTP 500** Ko lors de l'envoi du fichier
+
+        Customer -> "Ticketing API" : **PATCH /troubleTicket/{id}** Ajout de notes seulement car fichier KO
+        "Ticketing API" --> Customer : **HTTP 200** Ticket mis à jour
+
+        ... retry quelques heures après ...
+        "Customer" -> "Attachment API": **POST /attachment** Upload d'un fichier
+        "Attachment API" --> "Customer": **HTTP 201** Renvoi de l'url / id fichier
+        Customer -> "Ticketing API" : **PATCH /troubleTicket/{id}** Ajout des pieces jointes
+        "Ticketing API" --> Customer : **HTTP 200** Ticket mis à jour
+    end
+
+    "Ticketing API" -> "Ticketing API" : Maj du ticket : Passage en **inProgress**
+    "Ticketing API" -> "Customer" : **POST callbackUrl/troubleTicketStatusChangeEvent** \n avec évènement passage à **inProgress**
+    "Customer" --> "Ticketing API" : **HTTP 201** Evènement reçu
+
+    "Ticketing API" -> "Ticketing API" : Maj du ticket : Passage en **resolved**
+    "Ticketing API" -> "Customer" : **POST callbackUrl/troubleTicketStatusChangeEvent** \n avec évènement passage à **resolved**
+    "Customer" --> "Ticketing API" : **HTTP 201** Evènement reçu
+
+    "Ticketing API" -> "Ticketing API" : Maj du ticket : Passage en **closed**
+    "Ticketing API" -> "Customer" : **POST callbackUrl/troubleTicketStatusChangeEvent** \n avec évènement passage à **closed**
+    "Customer" --> "Ticketing API" : **HTTP 201** Evènement reçu
+end
+
+@enduml

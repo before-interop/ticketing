@@ -1,0 +1,39 @@
+@startuml
+header Interop Trouble Ticket Lifecycle \nbased on TMF 621
+
+
+state acknowledged #palegreen
+state inProgress #palegreen
+state closed #palegreen
+state rejected #palegreen
+state cancelled #palegreen
+state resolved #palegreen
+state choice <<choice>>
+state held #yellow
+note right: not used ?
+state pending #palegreen
+
+[*] --> acknowledged: Initial - basic check. \n Syntax Ok.
+[*] --> [*]: Http Error. \n Invalid Request or synthax error
+
+acknowledged -[bold,#black]-> inProgress: Qualification Ok. \n Process started. \n Complexity and expectedResolutiondate are filled
+acknowledged -[bold,#black]-> rejected: Qualification Ko. \n Business validation \n failed
+acknowledged -[bold,#black]-> cancelled: Ticket cancelled
+
+inProgress --> pending: Process needs\nextra information \n from author \nto continue
+pending -down-> cancelled: Extra information \nnot provided by author
+pending --> inProgress: Extra information \nprovided by Author
+inProgress -[bold,#black]-> cancelled: Ticket cancelled
+inProgress -[bold,#black]-> resolved: Ticket resolved
+inProgress -up-> held: Process blocked \ndue to an issue
+held --> inProgress: Issue resolved
+
+resolved -[bold,#black]-> choice
+choice -[bold,#black]-> inProgress: Resolution rejected
+choice -[bold,#black]-> closed: Resolution accepted
+
+closed -[bold,#black]-> [*]: Final
+cancelled -[bold,#black]-> [*]: Final
+rejected -[bold,#black]-> [*]: Final
+
+@enduml
