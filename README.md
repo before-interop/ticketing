@@ -1,4 +1,4 @@
-Proposition de Ticketing Unifiée et implémentation dans le cadre des Anomalie IPE
+Proposition de Ticketing Unifiée et implémentation dans le cadre des Anomalies IPE
 =
 
-Les différentes propositions pourront seront discutées sur cette espace.
+Les différentes propositions pourront seront discutées sur cet espace.
