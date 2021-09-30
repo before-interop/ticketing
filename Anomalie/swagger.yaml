@@ -488,7 +488,6 @@ components:
           format: date
           maxLength: 255
           description: Informations a fournir si possible pour les immeubles neufs.\nObligatoire\nA remplir avec la valeur cible, sinon "NA"
-          default: NA
         reference_pbo:
           type: string
           maxLength: 255
