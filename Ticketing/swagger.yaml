@@ -389,6 +389,18 @@ paths:
               responses: # Expected responses to the callback message
                 '201':
                   description: Your server returns this code if it accepts the callback
+        troubleTicketAttributeValueChangeEvent:
+          '{$request.body#/callback}/{$request.query.eventType}':
+            post:
+              requestBody: # Contents of the callback message
+                required: true
+                content:
+                  application/json:
+                    schema:
+                      $ref: "#/components/schemas/TroubleTicketAttributeValueChangeEvent"
+              responses: # Expected responses to the callback message
+                '201':
+                  description: Your server returns this code if it accepts the callback
       responses:
         "201":
           description: Subscribed
@@ -898,12 +910,6 @@ components:
       type: object
       description: The notification data structure
       properties:
-        id:
-          type: string
-          description: Identifier of the Process flow
-        href:
-          type: string
-          description: Reference of the ProcessFlow
         eventId:
           type: string
           description: The identifier of the notification.
@@ -936,6 +942,50 @@ components:
         event:
           $ref: "#/components/schemas/TroubleTicketStatusChangeEventPayload"
     TroubleTicketStatusChangeEventPayload:
+      type: object
+      description: The event data structure
+      properties:
+        troubleTicket:
+          $ref: "#/components/schemas/TroubleTicket"
+    TroubleTicketAttributeValueChangeEvent:
+      type: object
+      description: The notification data structure
+      properties:
+        eventId:
+          type: string
+          description: The identifier of the notification.
+        eventTime:
+          type: string
+          format: date-time
+          description: Time of the event occurrence.
+        eventType:
+          type: string
+          description: The type of the notification.
+        correlationId:
+          type: string
+          description: The correlation id for this event.
+        domain:
+          type: string
+          description: The domain of the event.
+        title:
+          type: string
+          description: The title of the event.
+        description:
+          type: string
+          description: An explnatory of the event.
+        priority:
+          type: string
+          description: A priority.
+        timeOcurred:
+          type: string
+          format: date-time
+          description: The time the event occured.
+        fieldPath:
+          type: string
+          description: The path identifying the object field concerned by this notification.
+        event:
+          $ref: '#/components/schemas/TroubleTicketAttributeValueChangeEventPayload'
+    TroubleTicketAttributeValueChangeEventPayload:
       type: object
       description: The event data structure
       properties:
