@@ -781,6 +781,8 @@ components:
 
         Skipped properties: id,href,creationDate,lastUpdate,statusChange,statusChangeDate
       properties:
+        status:
+          $ref: "#/components/schemas/TroubleTicketStatusType"
         attachment:
           type: array
           items:
