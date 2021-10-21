@@ -16,7 +16,7 @@ state pending #palegreen
 [*] --> [*]: Erreur Http. \n Requête invalide ou syntaxe KO
 
 acknowledged -[#green]-> inProgress: <color:#green>Affectation d'une ressource (humaine ou si)
-acknowledged -[bold,#green]-> rejected: <color:#green>Validation KO \n <color:#green>(ex : ticket en masse pas sur la meme commune)
+acknowledged -[bold,#green]-> rejected: <color:#green>Validation KO
 acknowledged -[bold,#blue]-> cancelled: <color:#blue>Ticket annulé par l'OC
 
 inProgress -[#green]-> pending: <color:#green>l'Oi a besoin d'informations supplémentaires\n<color:#green> pour traiter le ticket
@@ -27,11 +27,11 @@ inProgress -[bold,#green]-> cancelled: <color:#green>Ticket annulé par l'OI \n<
 inProgress -[bold,#blue]-> cancelled: <color:#blue>Ticket annulé \n<color:#blue> par l'OC
 inProgress -[bold,#green]-> resolved: <color:#green>Ticket résolu
 inProgress -up[#green]-> held: <color:#green>affichage d'un gel interne OI
-inProgress -[#blue]-> held: <color:#blue>Relance du ticket par l'oc (Attente retour de l'oi)
 inProgress -[#green]-> inProgress : <color:#green>Complexity et expectedResolutiondate sont renseignées
 held -[#green]-> inProgress: <color:#green>Changement de la date de résolution\n<color:#green> et complexité si nécessaire
 
 resolved -[bold,#blue]-> choice
+resolved -[bold,#green]-> closed: Cloture par l'OI si besoin
 choice -[bold,#blue]-> inProgress: <color:#blue>Oc refuse la résolution
 choice -[bold,#blue]-> closed: <color:#blue>Résolution acceptée
 
