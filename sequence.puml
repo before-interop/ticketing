@@ -6,6 +6,7 @@ autonumber
 group Pré requis dépot ticket
     "Customer" -> "Anomalie IPE API": **POST /anomalieIpe** : Définition de l'anomalie
     "Anomalie IPE API" -> "Customer": **HTTP 201** Renvoi de l'url / id de l'anomalie déclarée
+    note right: json : { id: monIdentifiantAnomalie, href: le lien vers l'api anomalie}
     "Customer" -> "Attachment API": **POST /attachment** Upload d'un fichier
     ... Upload du fichier ...
     "Attachment API" --> "Customer": **HTTP 201** Renvoi de l'url / id fichier
@@ -13,6 +14,7 @@ end
 
 group Création / mise à jour par le client
     Customer -> "Ticketing API" : **POST /troubleTicket** Création du ticket à **acknowledged** \navec ses références de **documents** et d'**anomalie**
+    note right: json : {\ntype: "addresse.modification", \nrelatedEntity: [{\n  id: monIdentifiantAnomalieIpe, \n  href: le lien vers l'api anomalie\n }]}
     "Ticketing API" --> Customer : **HTTP 201** Identifiant du ticket
     ... ...
     Customer -> "Ticketing API" : **PATCH /troubleTicket/{id}** Ajout d'informations complémentaires via les notes

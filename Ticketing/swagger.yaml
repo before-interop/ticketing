@@ -7,7 +7,9 @@ info:
   version: 1.0.0
 tags:
   - name: troubleTicket
-  - name: notification
+  - name: hub
+servers:
+  - url: https://serverRoot/troubleTicket/v1
 paths:
   /troubleTicket:
     get:
@@ -353,12 +355,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  /subscribe:
+  /hub:
     post:
       summary: Subscribe to notification
-      operationId: subscribe
+      operationId: hub
       tags:
-        - notification
+        - hub
       requestBody:
         required: true
         content:
@@ -369,10 +371,12 @@ paths:
                 callback: # Callback URL
                   type: string
                   format: uri
-                  example: https://myserver.com/send/callback/here/with/search/parameters
+                  example: https://myserver.com/send/callback
+                  maxLength: 2048
                 query:
                   type: string
                   format: uri
+                  maxLength: 2048
               required:
                 - callback
                 - query
@@ -450,12 +454,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  "/unsubscribe/{id}":
+  "/hub/{id}":
     delete:
       operationId: unsubscribe
       summary: Unsubscribe to notification
       tags:
-        - notification
+        - hub
       parameters:
         - name: id
           required: true
@@ -502,8 +506,6 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-servers:
-  - url: https://serverRoot/troubleTicket/v1/
 components:
   schemas:
     AttachmentRef:
@@ -517,6 +519,7 @@ components:
         href:
           type: string
           description: URL serving as reference for the attachment resource
+          maxLength: 2048
         description:
           type: string
           description: A narrative text describing the content of the attachment
@@ -587,6 +590,7 @@ components:
         href:
           type: string
           description: Reference of the related entity.
+          maxLength: 2048
         name:
           type: string
           description: Name of the related entity.
@@ -608,6 +612,39 @@ components:
           type: string
           description: The actual type of the target instance when needed for
             disambiguation.
+    RelatedParty:
+      type: object
+      description: Related Entity reference. A related party defines party or party role linked to a specific entity.
+      required:
+        - '@referredType'
+        - id
+      properties:
+        id:
+          type: string
+          description: Unique identifier of a related entity.
+        href:
+          type: string
+          description: Reference of the related entity.
+          maxLength: 2048
+        name:
+          type: string
+          description: Name of the related entity.
+        role:
+          type: string
+          description: Role played by the related party
+        "@baseType":
+          type: string
+          description: When sub-classing, this defines the super-class
+        "@schemaLocation":
+          type: string
+          format: uri
+          description: A URI to a JSON-Schema file that defines additional attributes and relationships
+        "@type":
+          type: string
+          description: When sub-classing, this defines the sub-class entity name
+        "@referredType":
+          type: string
+          description: The actual type of the target instance when needed for disambiguation.
     StatusChange:
       type: object
       description: Holds the status notification reasons and associated date the status
@@ -667,10 +704,20 @@ components:
           type: string
           description: Name of the trouble ticket, typically a short description provided
             by the user that create the ticket
+        priority:
+          type: string
+          description: |-
+            The priority of the trouble ticket and how quickly the issue should be resolved. Example: Critical, High, Medium, Low.
+            The value is set by the ticket management system considering the severity, ticket type etc...'
         resolutionDate:
           type: string
           format: date-time
           description: The date and time the trouble ticket was resolved
+        severity:
+          type: string
+          description: |-
+            The severity of the issue. Indicate the implication of the issue on the expected functionality e.g. of a system, application, service etc..
+            Severity values can be for example : Critical, Major, Minor
         statusChangeDate:
           type: string
           format: date-time
@@ -680,8 +727,15 @@ components:
           description: The reason for changing the status
         ticketType:
           type: string
-          description: represent a business type of the trouble ticket e.g. incident,
-            complain, request
+          description: |-
+            represents a business type of the trouble ticket
+            AnomalieIPE :
+            - AnomalieAdresse.modification
+            - AnomalieAdresse.creation
+            - AnomalieAdresse.demandeInformations
+            - AnomalieAdresse.nonRespectProtocole
+            Malfaçons :
+            - Malfacon
         complexity:
           $ref: "#/components/schemas/ComplexityType"
         attachment:
@@ -701,6 +755,11 @@ components:
             $ref: "#/components/schemas/RelatedEntity"
           description: An entity that is related to the ticket such as a bill, a product,
             etc. The entity against which the ticket is associated.
+        relatedParty:
+          type: array
+          items:
+            $ref: "#/components/schemas/RelatedParty"
+          description: The related party(ies) that are associated to the ticket.
         status:
           $ref: "#/components/schemas/TroubleTicketStatusType"
         statusChange:
@@ -736,6 +795,7 @@ components:
       required:
         - description
         - ticketType
+        - severity
       properties:
         description:
           type: string
@@ -747,6 +807,11 @@ components:
           type: string
           description: Name of the trouble ticket, typically a short description provided
             by the user that create the ticket
+        severity:
+          type: string
+          description: |-
+            The severity of the issue. Indicate the implication of the issue on the expected functionality e.g. of a system, application, service etc..
+            Severity values can be for example : Critical, Major, Minor
         ticketType:
           type: string
           description: represent a business type of the trouble ticket e.g. incident,
@@ -768,6 +833,11 @@ components:
             $ref: "#/components/schemas/RelatedEntity"
           description: An entity that is related to the ticket such as a bill, a product,
             etc. The entity against which the ticket is associated.
+        relatedParty:
+          type: array
+          items:
+            $ref: "#/components/schemas/RelatedParty"
+          description: The related party(ies) that are associated to the ticket.
         troubleTicketRelationship:
           type: array
           items:
@@ -795,6 +865,9 @@ components:
       properties:
         status:
           $ref: "#/components/schemas/TroubleTicketStatusType"
+        statusChangeReason:
+          type: string
+          description: The reason for changing the status
         attachment:
           type: array
           items:
@@ -806,6 +879,16 @@ components:
           items:
             $ref: "#/components/schemas/Note"
           description: The note(s) that are associated to the ticket.
+        severity:
+          type: string
+          description: |-
+            The severity of the issue. Indicate the implication of the issue on the expected functionality e.g. of a system, application, service etc..
+            Severity values can be for example : Critical, Major, Minor
+        relatedParty:
+          type: array
+          items:
+            $ref: "#/components/schemas/RelatedParty"
+          description: The related party(ies) that are associated to the ticket.
         troubleTicketRelationship:
           type: array
           items:
@@ -833,6 +916,7 @@ components:
         href:
           type: string
           description: Reference of the Trouble Ticket
+          maxLength: 2048
         name:
           type: string
           description: Name of the Trouble Ticket
@@ -1002,6 +1086,8 @@ components:
         callback:
           type: string
           description: The callback being registered.
+          maxLength: 2048
         query:
           type: string
           description: query used to notify
+          maxLength: 2048
