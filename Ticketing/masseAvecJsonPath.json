@@ -1,0 +1,66 @@
+[
+  {
+    "id": "identifiant du Ticket",
+    "href": "url",
+    "creationDate": "2021-12-03T10:16:36.236Z",
+    "description": "Description du ticket",
+    "lastUpdate": "2021-12-03T10:16:36.236Z",
+    "name": "Titre du ticket",
+    "ticketType": "anomalie",
+    "complexity": "minor",
+    "attachment": [
+      {
+        "id": "identifiantMaPremierePJ",
+        "href": "http://attachement.interop.fr/identifiantMaPremierePJ",
+        "@type": "AttachmentRef"
+      }
+    ],
+    "note": [
+      {
+        "id": "id note 1",
+        "author": "client SFR",
+        "date": "2021-12-03T10:16:36.236Z",
+        "text": "mes informations  en tant que SFR"
+      },
+      {
+        "id": "id note 2",
+        "author": "retour Orange",
+        "date": "2021-12-03T10:16:36.236Z",
+        "text": "mes informations en tant qu'Orange"
+      },
+      {
+        "id": "id note 3",
+        "author": "client SFR",
+        "date": "2022-01-04T10:18:36.236Z",
+        "text": "Reprise du ticket par SFR pour cause de délai dépassé"
+      }
+    ],
+    "status": "cancelled",
+    "statusChangeDate": "2022-01-04T10:18:36.236Z",
+    "statusChangeReason": "Délai dépassé",
+    "statusChange": [
+      {
+        "changeDate": "2021-12-03T10:16:36.236Z",
+        "changeReason": "initialisation du ticket",
+        "status": "acknowledged"
+      },
+      {
+        "changeDate": "2021-12-03T10:18:36.236Z",
+        "changeReason": "Début du traitement du ticket",
+        "status": "inProgress"
+      },
+      {
+        "changeDate": "2022-01-04T10:18:36.236Z",
+        "changeReason": "Délai dépassé",
+        "status": "cancelled"
+      }
+    ],
+    "troubleTicketRelationship" : [
+      {
+        "id": "idDuNouveauTicketChezSFR",
+        "href": "http://ticketing.sfr.com/idDuNouveauTicketChezSFR",
+        "relationshipType": "reprise de la malfaçon par l'OI"
+      }
+    ]
+  }
+]
