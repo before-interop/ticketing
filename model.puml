@@ -4,10 +4,10 @@ hide methods
 hide stereotype
 show <<Enumeration>> stereotype
 skinparam class {
-   BackgroundColor<<Enumeration>> #E6F5F7
-   BackgroundColor<<Ref>> #FFFFE0
+   BackgroundColor<<Enumeration>> #Thistle
+   BackgroundColor<<Ref>> #LightGrey
    BackgroundColor<<Pivot>> #FFFFFFF
-   BackgroundColor #FCF2E3
+   BackgroundColor #Grey
 }
 
 class TroubleTicket  <<Pivot>> {
@@ -30,11 +30,6 @@ class TroubleTicket  <<Pivot>> {
     @baseType : String
     @schemaLocation : Uri
     @type : String
-}
-
-class JSONPathAssetGroup {
-    JSONPath : String
-    entityType : String
 }
 
 class TroubleTicketStatusType <<Enumeration>> {
@@ -125,14 +120,12 @@ TroubleTicket *-->  "0..*" TroubleTicketRelationship : troubleTicketRelationship
 
 TroubleTicket *-->  "0..*" RelatedEntity : relatedEntity
 
-RelatedEntity <|-- JSONPathAssetGroup
-
 legend
     |= Color |= Description |
-    |<#E6F5F7>| Enumération de constantes|
+    |<#Thistle>| Enumération de constantes|
     |<#FFFFFF>| Ressource exposée par l'API |
-    |<#FFFFE0>| Objet pointant vers une API (via id et href) |
-    |<#FCF2E3>| Objet propre à l'API  |
+    |<#LightGrey>| Objet pointant vers une API (via id et href) |
+    |<#Grey>| Objet propre à l'API  |
 endlegend
 
 @enduml

@@ -301,7 +301,7 @@ paths:
             type: string
       requestBody:
         content:
-          application/json:
+          application/merge-patch+json:
             schema:
               $ref: "#/components/schemas/TroubleTicket_Update"
         description: The TroubleTicket to be updated
@@ -402,6 +402,18 @@ paths:
                   application/json:
                     schema:
                       $ref: "#/components/schemas/TroubleTicketAttributeValueChangeEvent"
+              responses: # Expected responses to the callback message
+                '201':
+                  description: Your server returns this code if it accepts the callback
+        troubleTicketCreateEvent:
+          '{$request.body#/callback}/{$request.query.eventType}':
+            post:
+              requestBody: # Contents of the callback message
+                required: true
+                content:
+                  application/json:
+                    schema:
+                      $ref: "#/components/schemas/TroubleTicketCreateEvent"
               responses: # Expected responses to the callback message
                 '201':
                   description: Your server returns this code if it accepts the callback
@@ -516,6 +528,7 @@ components:
         id:
           type: string
           description: Unique-Identifier for this attachment
+          maxLength: 255
         href:
           type: string
           description: URL serving as reference for the attachment resource
@@ -523,27 +536,34 @@ components:
         description:
           type: string
           description: A narrative text describing the content of the attachment
+          maxLength: 65535
         name:
           type: string
           description: Name of the related entity.
+          maxLength: 255
         url:
           type: string
           description: Link to the attachment media/content
+          maxLength: 2048
         "@baseType":
           type: string
           description: When sub-classing, this defines the super-class
+          maxLength: 255
         "@schemaLocation":
           type: string
           format: uri
           description: A URI to a JSON-Schema file that defines additional attributes and
             relationships
+          maxLength: 2048
         "@type":
           type: string
           description: When sub-classing, this defines the sub-class entity name
+          maxLength: 255
         "@referredType":
           type: string
           description: The actual type of the target instance when needed for
             disambiguation.
+          maxLength: 255
       required:
         - id
     Note:
@@ -554,9 +574,11 @@ components:
           type: string
           description: Identifier of the note within its containing entity (may or may not
             be globally unique, depending on provider implementation)
+          maxLength: 255
         author:
           type: string
           description: Author of the note
+          maxLength: 255
         date:
           type: string
           format: date-time
@@ -564,17 +586,21 @@ components:
         text:
           type: string
           description: Text of the note
+          maxLength: 65535
         "@baseType":
           type: string
           description: When sub-classing, this defines the super-class
+          maxLength: 255
         "@schemaLocation":
           type: string
           format: uri
           description: A URI to a JSON-Schema file that defines additional attributes and
             relationships
+          maxLength: 2048
         "@type":
           type: string
           description: When sub-classing, this defines the sub-class entity name
+          maxLength: 255
     RelatedEntity:
       type: object
       description: A reference to an entity, where the type of the entity is not known in
@@ -587,6 +613,7 @@ components:
         id:
           type: string
           description: Unique identifier of a related entity.
+          maxLength: 255
         href:
           type: string
           description: Reference of the related entity.
@@ -594,24 +621,30 @@ components:
         name:
           type: string
           description: Name of the related entity.
+          maxLength: 255
         role:
           type: string
           description: The role of an entity.
+          maxLength: 50
         "@baseType":
           type: string
           description: When sub-classing, this defines the super-class
+          maxLength: 255
         "@schemaLocation":
           type: string
           format: uri
           description: A URI to a JSON-Schema file that defines additional attributes and
             relationships
+          maxLength: 2048
         "@type":
           type: string
           description: When sub-classing, this defines the sub-class entity name
+          maxLength: 255
         "@referredType":
           type: string
           description: The actual type of the target instance when needed for
             disambiguation.
+          maxLength: 255
     RelatedParty:
       type: object
       description: Related Entity reference. A related party defines party or party role linked to a specific entity.
@@ -622,6 +655,7 @@ components:
         id:
           type: string
           description: Unique identifier of a related entity.
+          maxLength: 255
         href:
           type: string
           description: Reference of the related entity.
@@ -629,22 +663,28 @@ components:
         name:
           type: string
           description: Name of the related entity.
+          maxLength: 255
         role:
           type: string
           description: Role played by the related party
+          maxLength: 255
         "@baseType":
           type: string
           description: When sub-classing, this defines the super-class
+          maxLength: 255
         "@schemaLocation":
           type: string
           format: uri
           description: A URI to a JSON-Schema file that defines additional attributes and relationships
+          maxLength: 2048
         "@type":
           type: string
           description: When sub-classing, this defines the sub-class entity name
+          maxLength: 255
         "@referredType":
           type: string
           description: The actual type of the target instance when needed for disambiguation.
+          maxLength: 255
     StatusChange:
       type: object
       description: Holds the status notification reasons and associated date the status
@@ -657,20 +697,25 @@ components:
         changeReason:
           type: string
           description: The reason why the status changed.
+          maxLength: 255
         status:
           type: string
           description: The status of the trouble ticket
+          maxLength: 255
         "@baseType":
           type: string
           description: When sub-classing, this defines the super-class
+          maxLength: 255
         "@schemaLocation":
           type: string
           format: uri
           description: A URI to a JSON-Schema file that defines additional attributes and
             relationships
+          maxLength: 2048
         "@type":
           type: string
           description: When sub-classing, this defines the sub-class entity name
+          maxLength: 255
     TroubleTicket:
       type: object
       description: A trouble ticket is a record of an issue that is created, tracked, and
@@ -679,9 +724,11 @@ components:
         id:
           type: string
           description: Unique identifier of the trouble ticket
+          maxLength: 255
         href:
           type: string
           description: Hyperlink, a reference to the trouble ticket entity
+          maxLength: 2048
         creationDate:
           type: string
           format: date-time
@@ -689,6 +736,7 @@ components:
         description:
           type: string
           description: Description of the trouble or issue
+          maxLength: 65535
         expectedResolutionDate:
           type: string
           format: date-time
@@ -696,6 +744,7 @@ components:
         externalId:
           type: string
           description: Additional identifier coming from an external system
+          maxLength: 255
         lastUpdate:
           type: string
           format: date-time
@@ -704,11 +753,13 @@ components:
           type: string
           description: Name of the trouble ticket, typically a short description provided
             by the user that create the ticket
+          maxLength: 255
         priority:
           type: string
           description: |-
             The priority of the trouble ticket and how quickly the issue should be resolved. Example: Critical, High, Medium, Low.
             The value is set by the ticket management system considering the severity, ticket type etc...'
+          maxLength: 50
         resolutionDate:
           type: string
           format: date-time
@@ -718,6 +769,7 @@ components:
           description: |-
             The severity of the issue. Indicate the implication of the issue on the expected functionality e.g. of a system, application, service etc..
             Severity values can be for example : Critical, Major, Minor
+          maxLength: 50
         statusChangeDate:
           type: string
           format: date-time
@@ -725,17 +777,11 @@ components:
         statusChangeReason:
           type: string
           description: The reason for changing the status
+          maxLength: 255
         ticketType:
           type: string
-          description: |-
-            represents a business type of the trouble ticket
-            AnomalieIPE :
-            - AnomalieAdresse.modification
-            - AnomalieAdresse.creation
-            - AnomalieAdresse.demandeInformations
-            - AnomalieAdresse.nonRespectProtocole
-            Malfaçons :
-            - Malfacon
+          description: represents a business type of the trouble ticket
+          maxLength: 255
         complexity:
           $ref: "#/components/schemas/ComplexityType"
         attachment:
@@ -777,14 +823,17 @@ components:
         "@baseType":
           type: string
           description: When sub-classing, this defines the super-class
+          maxLength: 255
         "@schemaLocation":
           type: string
           format: uri
           description: A URI to a JSON-Schema file that defines additional attributes and
             relationships
+          maxLength: 2048
         "@type":
           type: string
           description: When sub-classing, this defines the sub-class entity name
+          maxLength: 255
     TroubleTicket_Create:
       type: object
       description: >-
@@ -800,22 +849,27 @@ components:
         description:
           type: string
           description: Description of the trouble or issue
+          maxLength: 65535
         externalId:
           type: string
           description: Additional identifier coming from an external system
+          maxLength: 255
         name:
           type: string
           description: Name of the trouble ticket, typically a short description provided
             by the user that create the ticket
+          maxLength: 255
         severity:
           type: string
           description: |-
             The severity of the issue. Indicate the implication of the issue on the expected functionality e.g. of a system, application, service etc..
             Severity values can be for example : Critical, Major, Minor
+          maxLength: 50
         ticketType:
           type: string
           description: represent a business type of the trouble ticket e.g. incident,
             complain, request
+          maxLength: 255
         attachment:
           type: array
           items:
@@ -847,14 +901,17 @@ components:
         "@baseType":
           type: string
           description: When sub-classing, this defines the super-class
+          maxLength: 255
         "@schemaLocation":
           type: string
           format: uri
           description: A URI to a JSON-Schema file that defines additional attributes and
             relationships
+          maxLength: 2048
         "@type":
           type: string
           description: When sub-classing, this defines the sub-class entity name
+          maxLength: 255
     TroubleTicket_Update:
       type: object
       description: >-
@@ -868,6 +925,7 @@ components:
         statusChangeReason:
           type: string
           description: The reason for changing the status
+          maxLength: 255
         attachment:
           type: array
           items:
@@ -884,6 +942,7 @@ components:
           description: |-
             The severity of the issue. Indicate the implication of the issue on the expected functionality e.g. of a system, application, service etc..
             Severity values can be for example : Critical, Major, Minor
+          maxLength: 50
         relatedParty:
           type: array
           items:
@@ -898,14 +957,17 @@ components:
         "@baseType":
           type: string
           description: When sub-classing, this defines the super-class
+          maxLength: 255
         "@schemaLocation":
           type: string
           format: uri
           description: A URI to a JSON-Schema file that defines additional attributes and
             relationships
+          maxLength: 2048
         "@type":
           type: string
           description: When sub-classing, this defines the sub-class entity name
+          maxLength: 255
     TroubleTicketRelationship:
       type: object
       description: Represents a relationship between trouble Trouble Tickets
@@ -913,6 +975,7 @@ components:
         id:
           type: string
           description: Unique identifier of the Trouble Ticket
+          maxLength: 255
         href:
           type: string
           description: Reference of the Trouble Ticket
@@ -920,24 +983,30 @@ components:
         name:
           type: string
           description: Name of the Trouble Ticket
+          maxLength: 255
         relationshipType:
           type: string
           description: Type of the  Trouble Ticket relationship can be isChiled, dependent
             etc...
+          maxLength: 50
         "@baseType":
           type: string
           description: When sub-classing, this defines the super-class
+          maxLength: 255
         "@schemaLocation":
           type: string
           format: uri
           description: A URI to a JSON-Schema file that defines additional attributes and
             relationships
+          maxLength: 2048
         "@type":
           type: string
           description: When sub-classing, this defines the sub-class entity name
+          maxLength: 255
     TroubleTicketStatusType:
       type: string
       description: Possible values for the status of the trouble ticket
+      maxLength: 50
       enum:
         - acknowledged
         - rejected
@@ -949,6 +1018,7 @@ components:
         - resolved
     ComplexityType:
       type: object
+      maxLength: 50
       enum:
         - low
         - medium
@@ -964,32 +1034,40 @@ components:
         code:
           type: string
           description: Application relevant detail, defined in the API or a common list.
+          maxLength: 50
         reason:
           type: string
           description: Explanation of the reason for the error which can be shown to a
             client user.
+          maxLength: 255
         message:
           type: string
           description: More details and corrective actions related to the error which can
             be shown to a client user.
+          maxLength: 65535
         status:
           type: string
           description: HTTP Error code extension
+          maxLength: 50
         referenceError:
           type: string
           format: uri
           description: URI of documentation describing the error.
+          maxLength: 2048
         "@baseType":
           type: string
           description: When sub-classing, this defines the super-class.
+          maxLength: 255
         "@schemaLocation":
           type: string
           format: uri
           description: A URI to a JSON-Schema file that defines additional attributes and
             relationships
+          maxLength: 2048
         "@type":
           type: string
           description: When sub-classing, this defines the sub-class entity name.
+          maxLength: 255
     TroubleTicketStatusChangeEvent:
       type: object
       description: The notification data structure
@@ -997,6 +1075,7 @@ components:
         eventId:
           type: string
           description: The identifier of the notification.
+          maxLength: 255
         eventTime:
           type: string
           format: date-time
@@ -1004,27 +1083,39 @@ components:
         eventType:
           type: string
           description: The type of the notification.
+          maxLength: 255
         correlationId:
           type: string
           description: The correlation id for this event.
+          maxLength: 255
         domain:
           type: string
           description: The domain of the event.
+          maxLength: 255
         title:
           type: string
           description: The title of the event.
+          maxLength: 255
         description:
           type: string
           description: A description of the event.
+          maxLength: 255
         priority:
           type: string
           description: A priority.
+          maxLength: 50
         timeOcurred:
           type: string
           format: date-time
           description: The time the event occured.
         event:
           $ref: "#/components/schemas/TroubleTicketStatusChangeEventPayload"
+    TroubleTicketCreateEventPayload:
+      type: object
+      description: The event data structure
+      properties:
+        troubleTicket:
+          $ref: "#/components/schemas/TroubleTicket"
     TroubleTicketStatusChangeEventPayload:
       type: object
       description: The event data structure
@@ -1038,6 +1129,7 @@ components:
         eventId:
           type: string
           description: The identifier of the notification.
+          maxLength: 255
         eventTime:
           type: string
           format: date-time
@@ -1045,21 +1137,27 @@ components:
         eventType:
           type: string
           description: The type of the notification.
+          maxLength: 255
         correlationId:
           type: string
           description: The correlation id for this event.
+          maxLength: 255
         domain:
           type: string
           description: The domain of the event.
+          maxLength: 255
         title:
           type: string
           description: The title of the event.
+          maxLength: 255
         description:
           type: string
-          description: An explnatory of the event.
+          description: A description of the event.
+          maxLength: 255
         priority:
           type: string
           description: A priority.
+          maxLength: 50
         timeOcurred:
           type: string
           format: date-time
@@ -1067,6 +1165,7 @@ components:
         fieldPath:
           type: string
           description: The path identifying the object field concerned by this notification.
+          maxLength: 2048
         event:
           $ref: '#/components/schemas/TroubleTicketAttributeValueChangeEventPayload'
     TroubleTicketAttributeValueChangeEventPayload:
