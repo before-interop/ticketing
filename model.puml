@@ -8,6 +8,8 @@ skinparam class {
    BackgroundColor<<Ref>> #LightGrey
    BackgroundColor<<Pivot>> #FFFFFFF
    BackgroundColor #Grey
+   BorderColor #Black
+   ArrowColor #Black
 }
 
 class TroubleTicket  <<Pivot>> {

@@ -9,7 +9,7 @@ tags:
   - name: troubleTicket
   - name: hub
 servers:
-  - url: https://serverRoot/troubleTicket/v1
+  - url: https://serverRoot/api/troubleTicket/v1
 paths:
   /troubleTicket:
     get:
@@ -29,64 +29,77 @@ paths:
           in: query
           description: Filter status
           schema:
-            type: string
+            $ref: "#/components/schemas/TroubleTicketStatusType"
           style: form
-        - name: status[]
+        - name: lastUpdate
           in: query
-          description: Filter status[]
-          schema:
-            type: array
-            items:
-              type: string
-              description: Filter status[]
-          style: form
-        - name: lastUpdate[before]
-          in: query
-          description: Filter lastUpdate[before]
+          description: Filter lastUpdate
           schema:
             type: string
+            format: date-time
           style: form
-        - name: lastUpdate[strictly_before]
+        - name: lastUpdate.lte
           in: query
-          description: Filter lastUpdate[strictly_before]
+          description: Filter lastUpdate before
           schema:
             type: string
+            format: date-time
           style: form
-        - name: lastUpdate[after]
+        - name: lastUpdate.lt
           in: query
-          description: Filter lastUpdate[after]
+          description: Filter lastUpdate strictly_before
           schema:
             type: string
+            format: date-time
           style: form
-        - name: lastUpdate[strictly_after]
+        - name: lastUpdate.gte
           in: query
-          description: Filter lastUpdate[strictly_after]
+          description: Filter lastUpdate after
           schema:
             type: string
+            format: date-time
           style: form
-        - name: creationDate[before]
+        - name: lastUpdate.gt
           in: query
-          description: Filter creationDate[before]
+          description: Filter lastUpdate strictly_after
           schema:
             type: string
+            format: date-time
           style: form
-        - name: creationDate[strictly_before]
+        - name: creationDate
           in: query
-          description: Filter creationDate[strictly_before]
+          description: Filter creationDate
           schema:
             type: string
+            format: date-time
           style: form
-        - name: creationDate[after]
+        - name: creationDate.lte
           in: query
-          description: Filter creationDate[after]
+          description: Filter creationDate before
           schema:
             type: string
+            format: date-time
           style: form
-        - name: creationDate[strictly_after]
+        - name: creationDate.lt
           in: query
-          description: Filter creationDate[strictly_after]
+          description: Filter creationDate strictly_before
           schema:
             type: string
+            format: date-time
+          style: form
+        - name: creationDate.gte
+          in: query
+          description: Filter creationDate after
+          schema:
+            type: string
+            format: date-time
+          style: form
+        - name: creationDate.gt
+          in: query
+          description: Filter creationDate strictly_after
+          schema:
+            type: string
+            format: date-time
           style: form
         - name: offset
           description: Requested index for start of resources to be provided in response
@@ -176,6 +189,11 @@ paths:
       responses:
         "201":
           description: Created
+          headers:
+            Location:
+              schema:
+                type: string
+              description: "URI of the newly created resource"
           content:
             application/json:
               schema:
@@ -384,6 +402,7 @@ paths:
         troubleTicketStatusChangeEvent:
           '{$request.body#/callback}/{$request.query.eventType}':
             post:
+              operationId: notifyTroubleTicketStatusChangeEvent
               requestBody: # Contents of the callback message
                 required: true
                 content:
@@ -396,6 +415,7 @@ paths:
         troubleTicketAttributeValueChangeEvent:
           '{$request.body#/callback}/{$request.query.eventType}':
             post:
+              operationId: notifyTroubleTicketAttributeValueChangeEvent
               requestBody: # Contents of the callback message
                 required: true
                 content:
@@ -408,6 +428,7 @@ paths:
         troubleTicketCreateEvent:
           '{$request.body#/callback}/{$request.query.eventType}':
             post:
+              operationId: notifyTroubleTicketCreateEvent
               requestBody: # Contents of the callback message
                 required: true
                 content:
@@ -1017,7 +1038,8 @@ components:
         - closed
         - resolved
     ComplexityType:
-      type: object
+      description: Estimated complexity to solve the ticket (set by the ticket management system)
+      type: string
       maxLength: 50
       enum:
         - low
@@ -1110,6 +1132,47 @@ components:
           description: The time the event occured.
         event:
           $ref: "#/components/schemas/TroubleTicketStatusChangeEventPayload"
+    TroubleTicketCreateEvent:
+      type: object
+      description: The notification data structure
+      properties:
+        id:
+          type: string
+          description: Identifier of the Process flow
+        href:
+          type: string
+          description: Reference of the ProcessFlow
+        eventId:
+          type: string
+          description: The identifier of the notification.
+        eventTime:
+          type: string
+          format: date-time
+          description: Time of the event occurrence.
+        eventType:
+          type: string
+          description: The type of the notification.
+        correlationId:
+          type: string
+          description: The correlation id for this event.
+        domain:
+          type: string
+          description: The domain of the event.
+        title:
+          type: string
+          description: The title of the event.
+        description:
+          type: string
+          description: An explnatory of the event.
+        priority:
+          type: string
+          description: A priority.
+        timeOcurred:
+          type: string
+          format: date-time
+          description: The time the event occured.
+        event:
+          $ref: "#/components/schemas/TroubleTicketCreateEventPayload"
     TroubleTicketCreateEventPayload:
       type: object
       description: The event data structure
