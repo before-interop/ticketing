@@ -1,0 +1,48 @@
+@startuml
+skinParam ArrowColor #black
+
+header Interop Trouble Ticket Lifecycle \nbased on TMF 621
+
+state acknowledged #palegreen
+state inProgress #palegreen
+state closed #palegreen
+state rejected #palegreen
+state cancelled #palegreen
+state resolved #palegreen
+state choice <<choice>>
+state held #palegreen
+state pending #palegreen
+
+[*] -[bold]-> acknowledged: Controle de base. \n Syntaxe Ok
+[*] -[bold]-> [*]: Erreur Http. \n Requête invalide ou syntaxe KO
+
+acknowledged -[bold]-> inProgress: Début du traitement du ticket
+acknowledged -[bold]-> rejected: Validation KO
+acknowledged -[bold]-> cancelled: Ticket annulé
+
+inProgress -[#brown]-> pending: Informations nécessaires \n pour reprise de traitement du ticket
+pending -down[#brown]-> cancelled: Annulation suite à \n non fourniture des informations nécessaires
+pending -[#brown]-> inProgress: Informations fournies.\n Traitment du ticket relancé
+inProgress -[bold]-> cancelled: Ticket annulé
+inProgress -[bold]-> resolved: Ticket résolu
+inProgress -up[#brown]-> held: Traitement du ticket interrompu \n suite à un problème
+
+held -[#brown]-> cancelled: Annulation suite à \nproblème insoluble
+held -[#brown]-> inProgress: Problème résolu.\n Traitment du ticket relancé
+
+resolved -[bold]-> choice
+resolved -[#brown]-> closed: Cloture par le gestionnaire du ticket\n si besoin
+choice -[bold]-> inProgress: Refus la résolution
+choice -[bold]-> closed: Résolution acceptée
+
+closed -[bold]-> [*]: Fin du processus
+cancelled -[bold]-> [*]: Fin du processus
+rejected -[bold]-> [*]: Fin du processus
+
+legend
+    |= Color |= Type |= Description |
+    |<#black>|    <&arrow-right> | Transition obligatoire|
+    |<#brown>|    <&arrow-right> | Transition facultative |
+endlegend
+
+@enduml

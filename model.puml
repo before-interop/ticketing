@@ -1,0 +1,133 @@
+@startuml
+hide circle
+hide methods
+hide stereotype
+show <<Enumeration>> stereotype
+skinparam class {
+   BackgroundColor<<Enumeration>> #Thistle
+   BackgroundColor<<Ref>> #LightGrey
+   BackgroundColor<<Pivot>> #FFFFFFF
+   BackgroundColor #Grey
+   BorderColor #Black
+   ArrowColor #Black
+}
+
+class TroubleTicket  <<Pivot>> {
+    id : String
+    href : String
+    creationDate : DateTime
+    description : String
+    expectedResolutionDate : DateTime
+    externalId : String
+    lastUpdate : DateTime
+    name : String
+    priority : String
+    resolutionDate : DateTime
+    severity : String
+    status : TroubleTicketStatusType
+    statusChangeDate : DateTime
+    statusChangeReason : String
+    ticketType : String
+    complexity: String
+    @baseType : String
+    @schemaLocation : Uri
+    @type : String
+}
+
+class TroubleTicketStatusType <<Enumeration>> {
+    acknowledged
+    rejected
+    pending
+    held
+    inProgress
+    cancelled
+    closed
+    resolved
+}
+
+class Note  {
+    author : String
+    date : DateTime
+    id : String
+    text : String
+    @baseType : String
+    @schemaLocation : Uri
+    @type : String
+}
+
+class TroubleTicketRelationship  <<Ref>> {
+    href : String
+    id : String
+    name : String
+    relationshipType : String
+    @baseType : String
+    @schemaLocation : Uri
+    @type : String
+}
+
+class AttachmentRef <<Ref>>  {
+    id : String
+    href : Uri
+    name: String
+    mimeType : String
+    size : Quantity
+    @baseType : String
+    @referredType : String
+    @schemaLocation : Uri
+    @type : String
+}
+
+class StatusChange  {
+    changeDate : DateTime
+    changeReason : String
+    status : String
+    @baseType : String
+    @schemaLocation : Uri
+    @type : String
+}
+
+class RelatedEntity <<Ref>> {
+    href : String
+    id : String
+    name : String
+    role : String
+    @baseType : String
+    @referredType : String
+    @schemaLocation : Uri
+    @type : String
+}
+
+class RelatedParty <<Ref>>  {
+    href : String
+    id : String
+    name : String
+    role : String
+    @baseType : String
+    @referredType : String
+    @schemaLocation : Uri
+    @type : String
+}
+
+TroubleTicket -right[hidden]-> TroubleTicketStatusType
+
+Note "0..*" <-left-* TroubleTicket : note
+
+AttachmentRef "0..*" <--* TroubleTicket : attachment
+
+RelatedParty "0..*" <--* TroubleTicket : relatedParty
+
+TroubleTicket *-->  "0..*" StatusChange : statusChange
+
+TroubleTicket *-->  "0..*" TroubleTicketRelationship : troubleTicketRelationship
+
+TroubleTicket *-->  "0..*" RelatedEntity : relatedEntity
+
+legend
+    |= Color |= Description |
+    |<#Thistle>| Enumération de constantes|
+    |<#FFFFFF>| Ressource exposée par l'API |
+    |<#LightGrey>| Objet pointant vers une API (via id et href) |
+    |<#Grey>| Objet propre à l'API  |
+endlegend
+
+@enduml
