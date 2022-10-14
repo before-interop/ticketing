@@ -238,7 +238,8 @@ paths:
     get:
       operationId: retrieveTroubleTicket
       summary: Retrieves a TroubleTicket by ID
-      description: This operation retrieves a TroubleTicket entity. Attribute selection is
+      description:
+        This operation retrieves a TroubleTicket entity. Attribute selection is
         enabled for all first level attributes.
       tags:
         - troubleTicket
@@ -400,7 +401,7 @@ paths:
                 - query
       callbacks:
         troubleTicketStatusChangeEvent:
-          '{$request.body#/callback}/{$request.query.eventType}':
+          "{$request.body#/callback}/{$request.query.eventType}":
             post:
               operationId: notifyTroubleTicketStatusChangeEvent
               requestBody: # Contents of the callback message
@@ -410,10 +411,10 @@ paths:
                     schema:
                       $ref: "#/components/schemas/TroubleTicketStatusChangeEvent"
               responses: # Expected responses to the callback message
-                '201':
+                "201":
                   description: Your server returns this code if it accepts the callback
         troubleTicketAttributeValueChangeEvent:
-          '{$request.body#/callback}/{$request.query.eventType}':
+          "{$request.body#/callback}/{$request.query.eventType}":
             post:
               operationId: notifyTroubleTicketAttributeValueChangeEvent
               requestBody: # Contents of the callback message
@@ -423,10 +424,10 @@ paths:
                     schema:
                       $ref: "#/components/schemas/TroubleTicketAttributeValueChangeEvent"
               responses: # Expected responses to the callback message
-                '201':
+                "201":
                   description: Your server returns this code if it accepts the callback
         troubleTicketCreateEvent:
-          '{$request.body#/callback}/{$request.query.eventType}':
+          "{$request.body#/callback}/{$request.query.eventType}":
             post:
               operationId: notifyTroubleTicketCreateEvent
               requestBody: # Contents of the callback message
@@ -436,7 +437,7 @@ paths:
                     schema:
                       $ref: "#/components/schemas/TroubleTicketCreateEvent"
               responses: # Expected responses to the callback message
-                '201':
+                "201":
                   description: Your server returns this code if it accepts the callback
       responses:
         "201":
@@ -543,7 +544,8 @@ components:
   schemas:
     AttachmentRef:
       type: object
-      description: Attachment reference. An attachment complements the description of an
+      description:
+        Attachment reference. An attachment complements the description of an
         element (for instance a product) through video, pictures
       properties:
         id:
@@ -562,10 +564,6 @@ components:
           type: string
           description: Name of the related entity.
           maxLength: 255
-        url:
-          type: string
-          description: Link to the attachment media/content
-          maxLength: 2048
         "@baseType":
           type: string
           description: When sub-classing, this defines the super-class
@@ -573,7 +571,8 @@ components:
         "@schemaLocation":
           type: string
           format: uri
-          description: A URI to a JSON-Schema file that defines additional attributes and
+          description:
+            A URI to a JSON-Schema file that defines additional attributes and
             relationships
           maxLength: 2048
         "@type":
@@ -593,7 +592,8 @@ components:
       properties:
         id:
           type: string
-          description: Identifier of the note within its containing entity (may or may not
+          description:
+            Identifier of the note within its containing entity (may or may not
             be globally unique, depending on provider implementation)
           maxLength: 255
         author:
@@ -615,7 +615,8 @@ components:
         "@schemaLocation":
           type: string
           format: uri
-          description: A URI to a JSON-Schema file that defines additional attributes and
+          description:
+            A URI to a JSON-Schema file that defines additional attributes and
             relationships
           maxLength: 2048
         "@type":
@@ -624,7 +625,8 @@ components:
           maxLength: 255
     RelatedEntity:
       type: object
-      description: A reference to an entity, where the type of the entity is not known in
+      description:
+        A reference to an entity, where the type of the entity is not known in
         advance.
       required:
         - "@referredType"
@@ -654,7 +656,8 @@ components:
         "@schemaLocation":
           type: string
           format: uri
-          description: A URI to a JSON-Schema file that defines additional attributes and
+          description:
+            A URI to a JSON-Schema file that defines additional attributes and
             relationships
           maxLength: 2048
         "@type":
@@ -670,7 +673,7 @@ components:
       type: object
       description: Related Entity reference. A related party defines party or party role linked to a specific entity.
       required:
-        - '@referredType'
+        - "@referredType"
         - id
       properties:
         id:
@@ -708,7 +711,8 @@ components:
           maxLength: 255
     StatusChange:
       type: object
-      description: Holds the status notification reasons and associated date the status
+      description:
+        Holds the status notification reasons and associated date the status
         changed, populated by the server
       properties:
         changeDate:
@@ -730,7 +734,8 @@ components:
         "@schemaLocation":
           type: string
           format: uri
-          description: A URI to a JSON-Schema file that defines additional attributes and
+          description:
+            A URI to a JSON-Schema file that defines additional attributes and
             relationships
           maxLength: 2048
         "@type":
@@ -739,7 +744,8 @@ components:
           maxLength: 255
     TroubleTicket:
       type: object
-      description: A trouble ticket is a record of an issue that is created, tracked, and
+      description:
+        A trouble ticket is a record of an issue that is created, tracked, and
         managed by a trouble ticket management system
       properties:
         id:
@@ -772,7 +778,8 @@ components:
           description: The date and time that the trouble ticked was last updated
         name:
           type: string
-          description: Name of the trouble ticket, typically a short description provided
+          description:
+            Name of the trouble ticket, typically a short description provided
             by the user that create the ticket
           maxLength: 255
         priority:
@@ -809,7 +816,8 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/AttachmentRef"
-          description: File(s) attached to the trouble ticket. e.g. pictur of broken
+          description:
+            File(s) attached to the trouble ticket. e.g. pictur of broken
             device, scaning of a bill or charge
         note:
           type: array
@@ -820,7 +828,8 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/RelatedEntity"
-          description: An entity that is related to the ticket such as a bill, a product,
+          description:
+            An entity that is related to the ticket such as a bill, a product,
             etc. The entity against which the ticket is associated.
         relatedParty:
           type: array
@@ -839,7 +848,8 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/TroubleTicketRelationship"
-          description: A list of trouble ticket relationships (TroubleTicketRelationship
+          description:
+            A list of trouble ticket relationships (TroubleTicketRelationship
             [*]). Represents a relationship between trouble tickets
         "@baseType":
           type: string
@@ -848,7 +858,8 @@ components:
         "@schemaLocation":
           type: string
           format: uri
-          description: A URI to a JSON-Schema file that defines additional attributes and
+          description:
+            A URI to a JSON-Schema file that defines additional attributes and
             relationships
           maxLength: 2048
         "@type":
@@ -877,7 +888,8 @@ components:
           maxLength: 255
         name:
           type: string
-          description: Name of the trouble ticket, typically a short description provided
+          description:
+            Name of the trouble ticket, typically a short description provided
             by the user that create the ticket
           maxLength: 255
         severity:
@@ -888,14 +900,16 @@ components:
           maxLength: 50
         ticketType:
           type: string
-          description: represent a business type of the trouble ticket e.g. incident,
+          description:
+            represent a business type of the trouble ticket e.g. incident,
             complain, request
           maxLength: 255
         attachment:
           type: array
           items:
             $ref: "#/components/schemas/AttachmentRef"
-          description: File(s) attached to the trouble ticket. e.g. pictur of broken
+          description:
+            File(s) attached to the trouble ticket. e.g. pictur of broken
             device, scaning of a bill or charge
         note:
           type: array
@@ -906,7 +920,8 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/RelatedEntity"
-          description: An entity that is related to the ticket such as a bill, a product,
+          description:
+            An entity that is related to the ticket such as a bill, a product,
             etc. The entity against which the ticket is associated.
         relatedParty:
           type: array
@@ -917,7 +932,8 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/TroubleTicketRelationship"
-          description: A list of trouble ticket relationships (TroubleTicketRelationship
+          description:
+            A list of trouble ticket relationships (TroubleTicketRelationship
             [*]). Represents a relationship between trouble tickets
         "@baseType":
           type: string
@@ -926,7 +942,8 @@ components:
         "@schemaLocation":
           type: string
           format: uri
-          description: A URI to a JSON-Schema file that defines additional attributes and
+          description:
+            A URI to a JSON-Schema file that defines additional attributes and
             relationships
           maxLength: 2048
         "@type":
@@ -951,7 +968,8 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/AttachmentRef"
-          description: File(s) attached to the trouble ticket. e.g. pictur of broken
+          description:
+            File(s) attached to the trouble ticket. e.g. pictur of broken
             device, scaning of a bill or charge
         note:
           type: array
@@ -973,7 +991,8 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/TroubleTicketRelationship"
-          description: A list of trouble ticket relationships (TroubleTicketRelationship
+          description:
+            A list of trouble ticket relationships (TroubleTicketRelationship
             [*]). Represents a relationship between trouble tickets
         "@baseType":
           type: string
@@ -982,7 +1001,8 @@ components:
         "@schemaLocation":
           type: string
           format: uri
-          description: A URI to a JSON-Schema file that defines additional attributes and
+          description:
+            A URI to a JSON-Schema file that defines additional attributes and
             relationships
           maxLength: 2048
         "@type":
@@ -1007,7 +1027,8 @@ components:
           maxLength: 255
         relationshipType:
           type: string
-          description: Type of the  Trouble Ticket relationship can be isChiled, dependent
+          description:
+            Type of the  Trouble Ticket relationship can be isChiled, dependent
             etc...
           maxLength: 50
         "@baseType":
@@ -1017,7 +1038,8 @@ components:
         "@schemaLocation":
           type: string
           format: uri
-          description: A URI to a JSON-Schema file that defines additional attributes and
+          description:
+            A URI to a JSON-Schema file that defines additional attributes and
             relationships
           maxLength: 2048
         "@type":
@@ -1059,12 +1081,14 @@ components:
           maxLength: 50
         reason:
           type: string
-          description: Explanation of the reason for the error which can be shown to a
+          description:
+            Explanation of the reason for the error which can be shown to a
             client user.
           maxLength: 255
         message:
           type: string
-          description: More details and corrective actions related to the error which can
+          description:
+            More details and corrective actions related to the error which can
             be shown to a client user.
           maxLength: 65535
         status:
@@ -1083,7 +1107,8 @@ components:
         "@schemaLocation":
           type: string
           format: uri
-          description: A URI to a JSON-Schema file that defines additional attributes and
+          description:
+            A URI to a JSON-Schema file that defines additional attributes and
             relationships
           maxLength: 2048
         "@type":
@@ -1230,7 +1255,7 @@ components:
           description: The path identifying the object field concerned by this notification.
           maxLength: 2048
         event:
-          $ref: '#/components/schemas/TroubleTicketAttributeValueChangeEventPayload'
+          $ref: "#/components/schemas/TroubleTicketAttributeValueChangeEventPayload"
     TroubleTicketAttributeValueChangeEventPayload:
       type: object
       description: The event data structure
