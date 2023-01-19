@@ -669,6 +669,46 @@ components:
           description: The actual type of the target instance when needed for
             disambiguation.
           maxLength: 255
+
+    jsonPathAssetGroup:
+      type: object
+      description: JsonPath expression used to reference an asset group
+      required:
+        - jsonPath
+        - "@referredType"
+      properties:
+        jsonPath:
+          type: string
+          description: jsonPath expression used to point an asset group (i.e relatedEntities)
+          maxLength: 2048
+        role:
+          type: string
+          description: The role of an entity.
+          maxLength: 50
+        entityType:
+          type: string
+          description: The (sub)resource to used (filtering by json path query).
+          maxLength: 255
+        "@baseType":
+          type: string
+          description: When sub-classing, this defines the super-class
+          maxLength: 255
+        "@referredType":
+          type: string
+          description: The actual type of the target instance when needed for
+            disambiguation.
+          maxLength: 255
+        "@schemaLocation":
+          type: string
+          format: uri
+          description: A URI to a JSON-Schema file that defines additional attributes and
+            relationships
+          maxLength: 2048
+        "@type":
+          type: string
+          description: When sub-classing, this defines the sub-class entity name
+          maxLength: 255
+
     RelatedParty:
       type: object
       description: Related Entity reference. A related party defines party or party role linked to a specific entity.
@@ -866,6 +906,18 @@ components:
           type: string
           description: When sub-classing, this defines the sub-class entity name
           maxLength: 255
+      discriminator:
+        propertyName: "@type"
+
+    InteropTroubleTicket:
+      description: Specific Interop Implementation with AssetGroup support
+      allOf:
+        - $ref: "#/components/schemas/TroubleTicket"
+        - type: object
+          properties:
+            relatedAssetGroup:
+              $ref: "#/components/schemas/jsonPathAssetGroup"
+
     TroubleTicket_Create:
       type: object
       description: >-
@@ -950,6 +1002,18 @@ components:
           type: string
           description: When sub-classing, this defines the sub-class entity name
           maxLength: 255
+      discriminator:
+        propertyName: "@type"
+
+    InteropTroubleTicket_Create:
+      description: Specific Interop Implementation with AssetGroup support
+      allOf:
+        - $ref: "#/components/schemas/TroubleTicket_Create"
+        - type: object
+          properties:
+            relatedAssetGroup:
+              $ref: "#/components/schemas/jsonPathAssetGroup"
+
     TroubleTicket_Update:
       type: object
       description: >-

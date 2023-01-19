@@ -34,6 +34,10 @@ class TroubleTicket  <<Pivot>> {
     @type : String
 }
 
+class InteropTroubleTicket <<Pivot>> {
+}
+TroubleTicket <|-- InteropTroubleTicket
+
 class TroubleTicketStatusType <<Enumeration>> {
     acknowledged
     rejected
@@ -97,6 +101,16 @@ class RelatedEntity <<Ref>> {
     @type : String
 }
 
+class RelatedAssetGroup <<Ref>> {
+    JSONPath : String
+    role: String
+    entityType : String
+    @baseType : String
+    @referredType : String
+    @schemaLocation : Uri
+    @type : String
+}
+
 class RelatedParty <<Ref>>  {
     href : String
     id : String
@@ -121,6 +135,8 @@ TroubleTicket *-->  "0..*" StatusChange : statusChange
 TroubleTicket *-->  "0..*" TroubleTicketRelationship : troubleTicketRelationship
 
 TroubleTicket *-->  "0..*" RelatedEntity : relatedEntity
+
+InteropTroubleTicket *-->  "0..*" RelatedAssetGroup : relatedAssetGroup
 
 legend
     |= Color |= Description |
